@@ -69,9 +69,10 @@ def read_file():
                 count += 1
         sensor_main =  sensor_main + gas_sensor_1 + gas_sensor_2 + gas_sensor_3 + gas_sensor_4
 
+
+
         gas_main = gas_main + gas_conc
         index = count_1 * 4
-        print(sensor_main)
         gas1_sensor = sensor_main[:index]
         gas2_sensor = sensor_main[index:]
         gas_1= gas_main[:count_1]
@@ -80,7 +81,6 @@ def read_file():
         gas_1 = np.array(gas_1)
         gas1_sensor = np.array_split(np.array(gas1_sensor), 4)
         gas2_sensor = np.array_split(np.array(gas2_sensor), 4)
-        print(gas2_sensor)
         for i in range(4):
             print(np.corrcoef(gas1_sensor[i],gas_1)[0,1])
         for i in range(4):
@@ -209,13 +209,16 @@ def y_value(sensor_list):
         y.append(i * 2 + x)
     for i, z in zip(y,r_f):
         y_max.append(i + z)
-    for i in y_max:
-        print(i)
 
+def test_correlation():
+    x_array = [56, 56, 65, 65, 50, 25, 87, 44, 45]
+    y_array = [87, 91, 85, 91, 75, 28, 122, 66, 58]
+    print(np.corrcoef(x_array, y_array)[0, 1])
 
 s = load_report()
 hello = y_value(s)
 read_file()
+
 
 
 
