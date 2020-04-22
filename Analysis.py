@@ -17,21 +17,16 @@ class Gases:
         self.sensor_4 = sensor_4
 
 def read_file():
-    ammonia =[]
-    cyclohexanone = []
-    ethanol =[]
-    acetone = []
-    methanol =[]
     sensor_1 = []
     sensor_2 =[]
     sensor_3 =[]
     sensor_4 =[]
     gas_list =[]
-    sample_number =[]
-    Array =[]
-    array_2 =[]
-    p =[]
-    x =[]
+    gas_sensor_1 =[]
+    gas_sensor_2 =[]
+    gas_sensor_3 =[]
+    gas_sensor_4 =[]
+    gas_conc=[]
 
 
     with open('combined.txt', 'r') as data:
@@ -40,31 +35,56 @@ def read_file():
         for reading in csv.reader(data, delimiter=","):
             reading = [float(i) for i in reading]
             gas_list.append(Gases(reading[0],reading[1],reading[2],reading[3],reading[4],reading[5],reading[6]
-                                  ,reading[7],reading[8]))
-            sample_number.append(reading[0])
-            ammonia.append(reading[1])
-            cyclohexanone.append(reading[2])
-            ethanol.append(reading[3])
-            acetone.append(reading[4])
-            methanol.append(reading[5])
+                                  ,reading[7],reading[8],reading[9]))
             sensor_1.append(reading[6])
             sensor_2.append(reading[7])
             sensor_3.append(reading[8])
             sensor_4.append(reading[9])
         print(header)
+        count_1 = 0
         for entry in gas_list:
             if entry.sample == 1.0 or  entry.sample ==  2.0 or entry.sample ==  3.0 or entry.sample ==  4.0 or \
             entry.sample ==  6.0 or entry.sample == 10.0:
-                Array.append(entry.sensor_1)
-                array_2.append(entry.sensor_2)
-                x.append(entry.sensor_3)
-                p.append(entry.ammonia)
-        array =  array = Array + array_2 + x
-        g = p
-        g_2 = np.array(g)
-        l = np.array_split(np.array(array), 3)
-        for i in range(3):
-            print(np.corrcoef(l[i],g)[0,1])
+                gas_sensor_1.append(entry.sensor_1)
+                gas_sensor_2.append(entry.sensor_2)
+                gas_sensor_3.append(entry.sensor_3)
+                gas_sensor_4.append(entry.sensor_4)
+                gas_conc.append(entry.ammonia)
+                count_1 += 1
+        sensor_main = gas_sensor_1 + gas_sensor_2 + gas_sensor_3 + gas_sensor_4
+        gas_main = gas_conc
+        gas_sensor_1 =[]
+        gas_sensor_2=[]
+        gas_sensor_3 =[]
+        gas_sensor_4=[]
+        gas_conc = []
+        count =0
+        for entry in gas_list:
+            if entry.sample == 1.0 or entry.sample == 7.0 or  entry.sample == 10.0:
+                gas_sensor_1.append(entry.sensor_1)
+                gas_sensor_2.append(entry.sensor_2)
+                gas_sensor_3.append(entry.sensor_3)
+                gas_sensor_4.append(entry.sensor_4)
+                gas_conc.append(entry.cyclohexanone)
+                count += 1
+        sensor_main =  sensor_main + gas_sensor_1 + gas_sensor_2 + gas_sensor_3 + gas_sensor_4
+
+        gas_main = gas_main + gas_conc
+        index = count_1 * 4
+        print(sensor_main)
+        gas1_sensor = sensor_main[:index]
+        gas2_sensor = sensor_main[index:]
+        gas_1= gas_main[:count_1]
+        gas_2 =gas_main[count_1:]
+        gas_2  = np.array(gas_2)
+        gas_1 = np.array(gas_1)
+        gas1_sensor = np.array_split(np.array(gas1_sensor), 4)
+        gas2_sensor = np.array_split(np.array(gas2_sensor), 4)
+        print(gas2_sensor)
+        for i in range(4):
+            print(np.corrcoef(gas1_sensor[i],gas_1)[0,1])
+        for i in range(4):
+            print(np.corrcoef(gas2_sensor[i],gas_2)[0,1])
 
 
 
